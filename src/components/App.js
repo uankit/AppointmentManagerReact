@@ -10,17 +10,35 @@ class App extends Component {
     super();
     this.state = {
       appointments: [],
+      formDisplay: false,
     };
-    this.deleteAppointment = this.deleteAppointment.bind(this)
+    this.deleteAppointment = this.deleteAppointment.bind(this);
+    this.toggleForm = this.toggleForm.bind(this);
+    this.addAppointment = this.addAppointment.bind(this);
   }
 
-  deleteAppointment(id){
-    let newAppointment = this.state.appointments
-    newAppointment = without(newAppointment,id)
+  deleteAppointment(id) {
+    let newAppointment = this.state.appointments;
+    newAppointment = without(newAppointment, id);
     this.setState({
-      appointments:newAppointment
-    })
+      appointments: newAppointment,
+    });
   }
+
+  toggleForm() {
+    this.setState({
+      formDisplay: !this.state.formDisplay,
+    });
+  }
+
+  addAppointment(apt) {
+    let tempApt = this.state.appointments;
+    tempApt.unshift(apt);
+    this.setState({
+      appointments: tempApt,
+    });
+  }
+
   componentDidMount() {
     fetch("./data.json")
       .then((res) => res.json())
@@ -32,14 +50,17 @@ class App extends Component {
       });
   }
   render() {
-   
     return (
       <main className="page bg-white" id="petratings">
         <div className="container">
           <div className="row">
             <div className="col-md-12 bg-white">
               <div className="container">
-                <AddAppointment />
+                <AddAppointment
+                  formDisplay={this.state.formDisplay}
+                  toggleForm={this.toggleForm}
+                  addAppointment={this.addAppointment}
+                />
                 <SearchAppointment />
                 <ListAppointment
                   appointment={this.state.appointments}
